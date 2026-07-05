@@ -5,12 +5,35 @@ type ResultCardProps = {
   result: QualificationResult;
   onRestart: () => void;
   onBack: () => void;
+  saveStatus?: "idle" | "saving" | "saved" | "error";
+  saveMessage?: string | null;
 };
 
-export function ResultCard({ result, onRestart, onBack }: ResultCardProps) {
+export function ResultCard({
+  result,
+  onRestart,
+  onBack,
+  saveStatus = "idle",
+  saveMessage,
+}: ResultCardProps) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-card sm:p-8">
       <div className="space-y-6">
+        {saveStatus !== "idle" ? (
+          <div
+            className={`rounded-2xl border px-4 py-3 text-sm ${
+              saveStatus === "saved"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                : saveStatus === "error"
+                  ? "border-amber-200 bg-amber-50 text-amber-800"
+                  : "border-slate-200 bg-slate-50 text-slate-600"
+            }`}
+          >
+            {saveStatus === "saving"
+              ? "Guardando evaluación en Supabase..."
+              : saveMessage}
+          </div>
+        ) : null}
         <div className={`rounded-2xl border p-6 ${getLevelColor(result.level)}`}>
           <p className="text-sm font-medium uppercase tracking-wide">Resultado</p>
           <h2 className="mt-2 text-3xl font-bold">{result.title}</h2>

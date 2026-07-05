@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ProgressBar } from "@/components/ProgressBar";
 import { ResultCard } from "@/components/ResultCard";
 import { questions } from "@/lib/questions";
+import { saveEvaluation } from "@/lib/supabase/client";
 import { calculateQualification } from "@/lib/scoring";
 import type { Answers } from "@/lib/types";
 
@@ -11,12 +12,50 @@ export function QualificationForm() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   const currentQuestion = questions[step];
   const result = useMemo(
     () => (finished ? calculateQualification(answers) : null),
     [answers, finished],
   );
+
+  useEffect(() => {
+    if (!finished || !result) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function persistEvaluation() {
+      setSaveStatus("saving");
+      setSaveMessage(null);
+
+      const response = await saveEvaluation(result!, answers);
+
+      if (cancelled) {
+        return;
+      }
+
+      if (response.ok) {
+        setSaveStatus("saved");
+        setSaveMessage("Evaluación guardada en Supabase.");
+        return;
+      }
+
+      setSaveStatus("error");
+      setSaveMessage(response.error);
+    }
+
+    void persistEvaluation();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [finished, result, answers]);
 
   function handleSelect(value: string | number) {
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
@@ -33,6 +72,8 @@ export function QualificationForm() {
   function handleBack() {
     if (finished) {
       setFinished(false);
+      setSaveStatus("idle");
+      setSaveMessage(null);
       return;
     }
     setStep((prev) => Math.max(prev - 1, 0));
@@ -42,6 +83,8 @@ export function QualificationForm() {
     setStep(0);
     setAnswers({});
     setFinished(false);
+    setSaveStatus("idle");
+    setSaveMessage(null);
   }
 
   if (finished && result) {
@@ -50,6 +93,8 @@ export function QualificationForm() {
         result={result}
         onRestart={handleRestart}
         onBack={handleBack}
+        saveStatus={saveStatus}
+        saveMessage={saveMessage}
       />
     );
   }
