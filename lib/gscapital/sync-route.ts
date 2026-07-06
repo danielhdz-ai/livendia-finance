@@ -1,29 +1,37 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import {
-  createServerClient,
-  isSupabaseConfigured,
-} from "@/lib/supabase/server";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
-type EntityRow<T> = {
-  id: string;
-  data: T;
-};
+async function getAuthContext() {
+  if (!isSupabaseConfigured()) {
+    return { error: "Supabase no configurado", status: 503 as const };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return { error: "No autorizado", status: 401 as const };
+  }
+
+  return { supabase, user };
+}
 
 function createSyncHandlers<T extends { id: string }>(table: string) {
   return {
-    async GET() {
-      if (!isSupabaseConfigured()) {
-        return NextResponse.json(
-          { error: "Supabase no configurado" },
-          { status: 503 },
-        );
+    async GET(_request: NextRequest) {
+      const auth = await getAuthContext();
+      if ("error" in auth) {
+        return NextResponse.json({ error: auth.error }, { status: auth.status });
       }
 
-      const supabase = createServerClient();
-      const { data, error } = await supabase
+      const { data, error } = await auth.supabase
         .from(table)
         .select("data")
+        .eq("user_id", auth.user.id)
         .order("updated_at", { ascending: false });
 
       if (error) {
@@ -36,11 +44,9 @@ function createSyncHandlers<T extends { id: string }>(table: string) {
     },
 
     async POST(request: NextRequest) {
-      if (!isSupabaseConfigured()) {
-        return NextResponse.json(
-          { error: "Supabase no configurado" },
-          { status: 503 },
-        );
+      const auth = await getAuthContext();
+      if ("error" in auth) {
+        return NextResponse.json({ error: auth.error }, { status: auth.status });
       }
 
       const body = (await request.json()) as Record<string, T[]>;
@@ -50,11 +56,14 @@ function createSyncHandlers<T extends { id: string }>(table: string) {
         return NextResponse.json({ error: "Formato inválido" }, { status: 400 });
       }
 
-      const supabase = createServerClient();
-      const rows = incoming.map((item) => ({ id: item.id, data: item }));
+      const rows = incoming.map((item) => ({
+        id: item.id,
+        user_id: auth.user.id,
+        data: item,
+      }));
 
       if (rows.length > 0) {
-        const { error: upsertError } = await supabase
+        const { error: upsertError } = await auth.supabase
           .from(table)
           .upsert(rows, { onConflict: "id" });
 
@@ -64,9 +73,10 @@ function createSyncHandlers<T extends { id: string }>(table: string) {
       }
 
       const incomingIds = incoming.map((item) => item.id);
-      const { data: existing, error: listError } = await supabase
+      const { data: existing, error: listError } = await auth.supabase
         .from(table)
-        .select("id");
+        .select("id")
+        .eq("user_id", auth.user.id);
 
       if (listError) {
         return NextResponse.json({ error: listError.message }, { status: 500 });
@@ -77,10 +87,11 @@ function createSyncHandlers<T extends { id: string }>(table: string) {
         .filter((id) => !incomingIds.includes(id));
 
       if (idsToDelete.length > 0) {
-        const { error: deleteError } = await supabase
+        const { error: deleteError } = await auth.supabase
           .from(table)
           .delete()
-          .in("id", idsToDelete);
+          .in("id", idsToDelete)
+          .eq("user_id", auth.user.id);
 
         if (deleteError) {
           return NextResponse.json({ error: deleteError.message }, { status: 500 });

@@ -1,4 +1,10 @@
+import type { NextRequest } from "next/server";
 import { collaboratorsHandlers } from "@/lib/gscapital/sync-route";
 
-export const GET = collaboratorsHandlers.GET;
-export const POST = collaboratorsHandlers.POST;
+export async function GET(request: NextRequest) {
+  return collaboratorsHandlers.GET(request);
+}
+
+export async function POST(request: NextRequest) {
+  return collaboratorsHandlers.POST(request);
+}

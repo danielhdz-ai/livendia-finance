@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/gscapital/layout/AppHeader";
 import { TabNavigation } from "@/components/gscapital/layout/TabNavigation";
 import { AsesoramientoTab } from "@/components/gscapital/tabs/AsesoramientoTab";
@@ -14,6 +16,8 @@ import {
   GSCapitalProvider,
   useGSCapital,
 } from "@/components/gscapital/GSCapitalContext";
+import { AGENT_INFO } from "@/lib/gscapital/constants";
+import { createClient } from "@/lib/supabase/client";
 
 function TabContent() {
   const { activeTab, loading } = useGSCapital();
@@ -37,17 +41,38 @@ function TabContent() {
 }
 
 function GSCapitalShell() {
+  const router = useRouter();
   const { activeTab, setActiveTab, darkMode, toggleDarkMode } = useGSCapital();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    void supabase.auth.getUser().then(({ data }) => {
+      setUserEmail(data.user?.email ?? null);
+    });
+  }, []);
+
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      <AppHeader darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
+      <AppHeader
+        darkMode={darkMode}
+        onToggleDarkMode={toggleDarkMode}
+        userEmail={userEmail}
+        onLogout={() => void handleLogout()}
+      />
       <TabNavigation activeTab={activeTab} onChange={setActiveTab} />
       <main className="container mx-auto px-4 py-8">
         <TabContent />
       </main>
       <footer className="mt-12 border-t border-gray-200 bg-white py-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-900">
-        © {new Date().getFullYear()} GSCAPITAL - Todos los derechos reservados
+        © {new Date().getFullYear()} {AGENT_INFO.company} - Todos los derechos reservados
       </footer>
     </div>
   );
