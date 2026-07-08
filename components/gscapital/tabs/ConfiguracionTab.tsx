@@ -14,6 +14,13 @@ export function ConfiguracionTab() {
     refreshAll,
   } = useGSCapital();
 
+  function downloadEncargo() {
+    const link = document.createElement("a");
+    link.href = "/Livendia_Encargo_Servicios_Financiacion.docx";
+    link.download = "Livendia_Encargo_Servicios_Financiacion.docx";
+    link.click();
+  }
+
   function exportJson() {
     const blob = new Blob(
       [
@@ -89,6 +96,15 @@ export function ConfiguracionTab() {
               <input type="file" accept=".json" className="hidden" onChange={importJson} />
             </label>
           </div>
+        </div>
+        <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700">
+          <h3 className="mb-3 text-lg font-semibold">Encargo</h3>
+          <p className="mb-4 text-gray-600 dark:text-gray-300">
+            Descarga la plantilla de encargo de servicios de financiación en Word para rellenarla con el cliente.
+          </p>
+          <PrimaryButton type="button" onClick={downloadEncargo}>
+            Descargar encargo (.docx)
+          </PrimaryButton>
         </div>
         <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700">
           <h3 className="mb-3 text-lg font-semibold">Sincronización</h3>
