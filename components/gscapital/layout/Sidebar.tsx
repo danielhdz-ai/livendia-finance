@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import type { ReactNode } from "react";
 import type { TabId } from "@/lib/gscapital/types";
 import {
@@ -97,21 +96,10 @@ export function Sidebar({
 
   return (
     <aside className="flex h-screen w-64 flex-col bg-[#0b3fb0] text-white shadow-xl">
-      <div className="flex items-center gap-3 px-5 pb-6 pt-2">
-        <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-white/5">
-          <Image
-            src="/logo-livendia-white.png"
-            alt="Livendia Finance"
-            width={120}
-            height={120}
-            quality={100}
-            className="h-full w-full object-contain"
-            priority
-          />
-        </div>
+      <div className="px-5 pb-6 pt-2">
         <div className="flex min-w-0 flex-col leading-tight">
-          <span className="text-2xl font-extrabold tracking-tight text-white">livendia</span>
-          <span className="truncate text-[10px] uppercase tracking-[0.18em] text-white/70">
+          <span className="text-3xl font-extrabold tracking-tight text-white">livendia</span>
+          <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/75">
             Plataforma financiera
           </span>
         </div>
