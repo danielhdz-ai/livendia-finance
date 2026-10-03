@@ -36,24 +36,24 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 dark:bg-gray-900">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold uppercase text-slate-800 dark:text-white">
+          <h1 className="text-3xl font-bold uppercase text-slate-800">
             {AGENT_INFO.company}
           </h1>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-gray-500">
             {AGENT_INFO.name} | tlf: {AGENT_INFO.phone} | {AGENT_INFO.email}
           </p>
         </div>
 
-        <h2 className="mb-6 text-xl font-semibold text-gray-800 dark:text-gray-100">
+        <h2 className="mb-6 text-xl font-semibold text-gray-800">
           Iniciar sesión
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-gray-600">
               Email
             </label>
             <input
@@ -61,11 +61,11 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-600 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-gray-600">
               Contraseña
             </label>
             <input
@@ -74,12 +74,12 @@ export default function LoginPage() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2"
             />
           </div>
 
           {error ? (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
               {error}
             </p>
           ) : null}
@@ -93,7 +93,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+        <p className="mt-6 text-center text-sm text-gray-600">
           ¿No tienes cuenta?{" "}
           <Link href="/register" className="font-semibold text-blue-600 hover:underline">
             Regístrate

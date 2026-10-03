@@ -79,7 +79,7 @@ export function ConfiguracionTab() {
         <div className="grid gap-8 md:grid-cols-2">
           <div>
             <h3 className="mb-3 text-lg font-semibold">Exportar Datos</h3>
-            <p className="mb-4 text-gray-600 dark:text-gray-300">
+            <p className="mb-4 text-gray-600">
               Guarda una copia de clientes, colaboradores bancarios, inmobiliarios, notarías y tasadores.
             </p>
             <PrimaryButton type="button" onClick={exportJson}>
@@ -88,7 +88,7 @@ export function ConfiguracionTab() {
           </div>
           <div>
             <h3 className="mb-3 text-lg font-semibold">Importar Datos</h3>
-            <p className="mb-4 text-gray-600 dark:text-gray-300">
+            <p className="mb-4 text-gray-600">
               Carga datos desde JSON y sincronízalos con Supabase.
             </p>
             <label className="inline-block">
@@ -97,18 +97,18 @@ export function ConfiguracionTab() {
             </label>
           </div>
         </div>
-        <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700">
+        <div className="mt-8 border-t border-gray-200 pt-6">
           <h3 className="mb-3 text-lg font-semibold">Encargo</h3>
-          <p className="mb-4 text-gray-600 dark:text-gray-300">
+          <p className="mb-4 text-gray-600">
             Descarga la plantilla de encargo de servicios de financiación en Word para rellenarla con el cliente.
           </p>
           <PrimaryButton type="button" onClick={downloadEncargo}>
             Descargar encargo (.docx)
           </PrimaryButton>
         </div>
-        <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700">
+        <div className="mt-8 border-t border-gray-200 pt-6">
           <h3 className="mb-3 text-lg font-semibold">Sincronización</h3>
-          <p className="mb-4 text-gray-600 dark:text-gray-300">
+          <p className="mb-4 text-gray-600">
             Recarga todos los datos desde Supabase.
           </p>
           <SecondaryButton type="button" onClick={() => void refreshAll()}>

@@ -73,15 +73,11 @@ export function Sidebar({
   onChange,
   userEmail,
   onLogout,
-  darkMode,
-  onToggleDarkMode,
 }: {
   activeTab: TabId;
   onChange: (tab: TabId) => void;
   userEmail?: string | null;
   onLogout?: () => void;
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
 }) {
   const groups: Array<{ key: SidebarItem["group"]; title: string }> = [
     { key: "principal", title: "Principal" },
@@ -171,15 +167,6 @@ export function Sidebar({
               {compactEmail}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onToggleDarkMode}
-            className="rounded-md p-1.5 text-white/70 hover:bg-white/10 hover:text-white"
-            aria-label="Cambiar tema"
-            title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-          >
-            {darkMode ? "☀️" : "🌙"}
-          </button>
           {onLogout && (
             <button
               type="button"

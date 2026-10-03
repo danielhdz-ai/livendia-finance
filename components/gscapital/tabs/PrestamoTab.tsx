@@ -61,18 +61,18 @@ export function PrestamoTab() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      <h2 className="text-2xl font-bold text-gray-800">
         Calculadora de Préstamo Personal
       </h2>
       {currentClient ? (
-        <p className="text-sm text-gray-600 dark:text-gray-300">
+        <p className="text-sm text-gray-600">
           Cliente activo: <strong>{currentClient.name}</strong>
           {pendingLoanAmount ? (
             <> — importe sugerido por hipoteca: <strong>{pendingLoanAmount.toLocaleString("es-ES")} €</strong></>
           ) : null}
         </p>
       ) : (
-        <p className="text-sm text-amber-700 dark:text-amber-300">
+        <p className="text-sm text-amber-700">
           Seleccione un cliente en Asesoramiento para guardar la simulación en Supabase.
         </p>
       )}
@@ -91,8 +91,8 @@ export function PrestamoTab() {
               onClick={() => setPurpose(value)}
               className={`rounded-lg border-2 p-4 text-center ${
                 purpose === value
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900"
-                  : "border-transparent bg-gray-50 dark:bg-gray-700"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-transparent bg-gray-50"
               }`}
             >
               {label}
@@ -111,7 +111,7 @@ export function PrestamoTab() {
           <Field label="TAE Anual (%)"><Input type="number" step="0.01" value={tae} onChange={(e) => setTae(Number(e.target.value))} /></Field>
         </div>
 
-        <div className="mt-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
+        <div className="mt-6 rounded-lg bg-gray-50 p-4">
           <table className="w-full text-sm">
             <tbody>
               <tr><td className="py-2">Importe solicitado</td><td className="py-2 text-right font-semibold">{formatCurrency(loanAmount)}</td></tr>

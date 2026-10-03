@@ -238,7 +238,7 @@ export function HipotecaTab() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      <h2 className="text-2xl font-bold text-gray-800">
         Calcula el valor máximo de vivienda accesible según tus ingresos
       </h2>
       <Panel title="Datos del Préstamo Hipotecario">
@@ -322,7 +322,7 @@ export function HipotecaTab() {
                 <p>Préstamo personal adicional (estimado): <strong className="text-amber-600">{formatCurrency(result.suggestedPersonalLoanPayment)}</strong></p>
               ) : null}
               {(result.totalOperationCuota > result.cuotaMensual || result.totalCuotaMensual > result.cuotaMensual) ? (
-                <p className="border-t border-gray-200 pt-2 dark:border-gray-600">
+                <p className="border-t border-gray-200 pt-2">
                   Total cuota mensual: <strong className="text-blue-600">{formatCurrency(result.totalCuotaMensual || result.totalOperationCuota)}</strong>
                 </p>
               ) : null}
@@ -338,7 +338,7 @@ export function HipotecaTab() {
               ) : null}
             </div>
           </div>
-          <div className="mt-4 rounded-lg bg-gray-50 p-4 text-sm dark:bg-gray-700" dangerouslySetInnerHTML={{ __html: result.resumenHtml }} />
+          <div className="mt-4 rounded-lg bg-gray-50 p-4 text-sm" dangerouslySetInnerHTML={{ __html: result.resumenHtml }} />
           {result.shortfall > 0 ? (
             <p className="mt-3 text-sm text-amber-600">
               Financiación adicional sugerida: {formatCurrency(result.shortfall)}.

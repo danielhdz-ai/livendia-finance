@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/gscapital/layout/AppHeader";
-import { DashboardOverview } from "@/components/gscapital/layout/DashboardOverview";
 import { Sidebar } from "@/components/gscapital/layout/Sidebar";
 import { AsesoramientoTab } from "@/components/gscapital/tabs/AsesoramientoTab";
 import { ColaboradoresTab } from "@/components/gscapital/tabs/ColaboradoresTab";
@@ -33,8 +32,7 @@ function TabContent() {
   }
 
   return (
-    <div className="space-y-8">
-      {activeTab === "asesoramiento" ? <DashboardOverview /> : null}
+    <div className="h-full">
       {activeTab === "asesoramiento" ? <AsesoramientoTab /> : null}
       {activeTab === "hipoteca" ? <HipotecaTab /> : null}
       {activeTab === "prestamo" ? <PrestamoTab /> : null}
@@ -50,7 +48,7 @@ function TabContent() {
 
 function GSCapitalShell() {
   const router = useRouter();
-  const { activeTab, setActiveTab, darkMode, toggleDarkMode } = useGSCapital();
+  const { activeTab, setActiveTab } = useGSCapital();
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -68,24 +66,22 @@ function GSCapitalShell() {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-100 text-slate-900">
+    <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900">
       <Sidebar
         activeTab={activeTab}
         onChange={setActiveTab}
         userEmail={userEmail}
         onLogout={() => void handleLogout()}
-        darkMode={darkMode}
-        onToggleDarkMode={toggleDarkMode}
       />
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="flex h-screen flex-1 flex-col overflow-hidden">
         <AppHeader />
-        <main className="flex-1 px-6 py-8">
-          <div className="mx-auto max-w-7xl">
+        <main className="flex-1 overflow-y-auto bg-slate-50">
+          <div className="mx-auto h-full max-w-7xl px-6 py-6">
             <TabContent />
           </div>
         </main>
-        <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} {AGENT_INFO.company} - Todos los derechos reservados
+        <footer className="border-t border-slate-200 bg-white px-6 py-3 text-center text-xs text-slate-500">
+          © {new Date().getFullYear()} {AGENT_INFO.company} · Todos los derechos reservados
         </footer>
       </div>
     </div>

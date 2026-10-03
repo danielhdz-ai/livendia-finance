@@ -63,22 +63,22 @@ export function ColaboradoresTab() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-900">
+                  <tr className="bg-gray-50">
                     {["Banco", "Nombre", "Teléfono", "Email", "Oficina", "Condiciones", "Acciones"].map((h) => (
-                      <th key={h} className="border px-2 py-3 text-left dark:border-gray-600">{h}</th>
+                      <th key={h} className="border px-2 py-3 text-left">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {collaborators.map((item) => (
                     <tr key={item.id}>
-                      <td className="border px-2 py-2 dark:border-gray-600">{item.bank}</td>
-                      <td className="border px-2 py-2 dark:border-gray-600">{item.name}</td>
-                      <td className="border px-2 py-2 dark:border-gray-600">{item.phone || "-"}</td>
-                      <td className="border px-2 py-2 dark:border-gray-600">{item.email || "-"}</td>
-                      <td className="border px-2 py-2 dark:border-gray-600">{item.office || "-"}</td>
-                      <td className="border px-2 py-2 dark:border-gray-600">{item.conditions || "-"}</td>
-                      <td className="border px-2 py-2 dark:border-gray-600">
+                      <td className="border px-2 py-2">{item.bank}</td>
+                      <td className="border px-2 py-2">{item.name}</td>
+                      <td className="border px-2 py-2">{item.phone || "-"}</td>
+                      <td className="border px-2 py-2">{item.email || "-"}</td>
+                      <td className="border px-2 py-2">{item.office || "-"}</td>
+                      <td className="border px-2 py-2">{item.conditions || "-"}</td>
+                      <td className="border px-2 py-2">
                         <button type="button" className="mr-2 text-blue-600" onClick={() => setForm(item)}>Editar</button>
                         <button type="button" className="text-red-600" onClick={() => void deleteCollaborator(item.id)}>Eliminar</button>
                       </td>

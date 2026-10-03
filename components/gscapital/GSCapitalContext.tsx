@@ -35,8 +35,6 @@ import type {
 type GSCapitalContextValue = {
   activeTab: TabId;
   setActiveTab: (tab: TabId) => void;
-  darkMode: boolean;
-  toggleDarkMode: () => void;
   clients: Client[];
   currentClient: Client | null;
   setCurrentClient: (client: Client | null) => void;
@@ -72,7 +70,6 @@ const GSCapitalContext = createContext<GSCapitalContextValue | null>(null);
 
 export function GSCapitalProvider({ children }: { children: ReactNode }) {
   const [activeTab, setActiveTab] = useState<TabId>("asesoramiento");
-  const [darkMode, setDarkMode] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
@@ -101,20 +98,8 @@ export function GSCapitalProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const storedDarkMode = localStorage.getItem("bdfinanciera_darkMode");
-    // Default to light mode; only enable dark if the user has explicitly opted in.
-    setDarkMode(storedDarkMode === "true");
     void refreshAll();
   }, [refreshAll]);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    if (darkMode) {
-      localStorage.setItem("bdfinanciera_darkMode", "true");
-    } else {
-      localStorage.removeItem("bdfinanciera_darkMode");
-    }
-  }, [darkMode]);
 
   const persistClients = useCallback(async (nextClients: Client[]) => {
     setClients(nextClients);
@@ -271,8 +256,6 @@ export function GSCapitalProvider({ children }: { children: ReactNode }) {
     () => ({
       activeTab,
       setActiveTab,
-      darkMode,
-      toggleDarkMode: () => setDarkMode((value) => !value),
       clients,
       currentClient,
       setCurrentClient,
@@ -299,7 +282,6 @@ export function GSCapitalProvider({ children }: { children: ReactNode }) {
     }),
     [
       activeTab,
-      darkMode,
       clients,
       currentClient,
       collaborators,

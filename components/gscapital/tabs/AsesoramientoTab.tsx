@@ -9,6 +9,7 @@ import {
   PrimaryButton,
   SecondaryButton,
   Select,
+  Tag,
   TextArea,
 } from "@/components/gscapital/ui/Panel";
 import { AGENT_INFO } from "@/lib/gscapital/constants";
@@ -75,6 +76,17 @@ function buildClientFromForm(
   };
 }
 
+const STATUS_TONE: Record<
+  Client["status"],
+  React.ComponentProps<typeof Tag>["tone"]
+> = {
+  pendiente: "warning",
+  aprobado: "success",
+  rechazado: "danger",
+  activo: "info",
+  noactivo: "neutral",
+};
+
 function OwnerFields({
   index,
   owner,
@@ -86,9 +98,12 @@ function OwnerFields({
   const labels = ["Primer titular", "Segundo titular", "Tercer titular"];
 
   return (
-    <Panel title={`${labels[index]} (copropietario ${index + 1})`}>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Nombre completo">
+    <Panel
+      title={`${labels[index]}`}
+      description={`Datos del copropietario ${index + 1} de la operación.`}
+    >
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <Field label="Nombre completo" className="lg:col-span-2">
           <Input name={`${prefix}FullName`} defaultValue={owner.fullName ?? ""} />
         </Field>
         <Field label="Edad">
@@ -98,34 +113,34 @@ function OwnerFields({
           <Input name={`${prefix}Nationality`} defaultValue={owner.nationality ?? ""} />
         </Field>
         <Field label="Teléfono">
-          <Input name={`${prefix}Phone`} defaultValue={owner.phone ?? ""} />
+          <Input name={`${prefix}Phone`} defaultValue={owner.phone ?? ""} placeholder="+34..." />
         </Field>
         <Field label="DNI/NIE">
           <Input name={`${prefix}DNI`} defaultValue={owner.dni ?? ""} />
         </Field>
-        <Field label="Su Banco">
-          <Input name={`${prefix}Bank`} defaultValue={owner.bank ?? ""} />
-        </Field>
-        <Field label="Correo Electrónico">
+        <Field label="Correo Electrónico" className="lg:col-span-2">
           <Input name={`${prefix}Email`} type="email" defaultValue={owner.email ?? ""} />
         </Field>
         <Field label="Empresa">
           <Input name={`${prefix}Company`} defaultValue={owner.company ?? ""} />
         </Field>
         <Field label="Tipo de Contrato">
-          <Input name={`${prefix}ContractType`} defaultValue={owner.contractType ?? ""} />
+          <Input name={`${prefix}ContractType`} defaultValue={owner.contractType ?? ""} placeholder="Indefinido, temporal..." />
         </Field>
         <Field label="Antigüedad">
-          <Input name={`${prefix}Seniority`} defaultValue={owner.seniority ?? ""} />
+          <Input name={`${prefix}Seniority`} defaultValue={owner.seniority ?? ""} placeholder="Ej: 5 años" />
         </Field>
-        <Field label="Nómina (ingresos mensuales netos)">
-          <Input name={`${prefix}Payslips`} type="number" defaultValue={owner.payslips ?? ""} />
+        <Field label="Su Banco">
+          <Input name={`${prefix}Bank`} defaultValue={owner.bank ?? ""} placeholder="Banco principal" />
         </Field>
-        <Field label="Ahorros (para hipoteca)">
-          <Input name={`${prefix}Savings`} type="number" defaultValue={owner.savings ?? ""} />
+        <Field label="Nómina mensual (€)">
+          <Input name={`${prefix}Payslips`} type="number" defaultValue={owner.payslips ?? ""} placeholder="0,00" />
         </Field>
-        <Field label="Préstamos (cuota mensual)">
-          <Input name={`${prefix}Loans`} type="number" defaultValue={owner.loans ?? ""} />
+        <Field label="Ahorros para hipoteca (€)">
+          <Input name={`${prefix}Savings`} type="number" defaultValue={owner.savings ?? ""} placeholder="0,00" />
+        </Field>
+        <Field label="Cuotas de préstamos (€)">
+          <Input name={`${prefix}Loans`} type="number" defaultValue={owner.loans ?? ""} placeholder="0,00" />
         </Field>
       </div>
     </Panel>
@@ -190,58 +205,99 @@ export function AsesoramientoTab() {
   const ai = currentClient?.additionalInfo ?? {};
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
-      <Panel title="Asesoramiento Financiero">
-        <div className="mb-6 space-y-2 text-gray-700 dark:text-gray-300">
-          <p>{AGENT_INFO.name}</p>
-          <p>{AGENT_INFO.address}</p>
-          <p>Tfno. {AGENT_INFO.landline}</p>
-          <p>{AGENT_INFO.website}</p>
-        </div>
-        <h4 className="mb-3 border-t border-gray-200 pt-3 font-semibold dark:border-gray-600">
-          Operación Actual
-        </h4>
-        {currentClient ? (
-          <div className="space-y-2">
-            <p className="font-semibold">{getOperationDisplayName(currentClient)}</p>
-            <p className="text-sm text-gray-500">
-              {ownerCount} copropietario{ownerCount > 1 ? "s" : ""} en la misma operación
-            </p>
-            <Select
-              value={currentClient.status}
-              onChange={(event) =>
-                void updateClient({
-                  ...currentClient,
-                  status: event.target.value as Client["status"],
-                })
-              }
-            >
-              <option value="pendiente">Pendiente</option>
-              <option value="aprobado">Aprobado</option>
-              <option value="rechazado">Rechazado</option>
-              <option value="activo">Activo</option>
-              <option value="noactivo">No Activo</option>
-            </Select>
+    <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
+      <Panel
+        title="Asesoramiento Financiero"
+        description="Tu información profesional y la operación en curso."
+      >
+        <dl className="mb-6 space-y-3 text-sm">
+          <div>
+            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Asesor
+            </dt>
+            <dd className="mt-0.5 font-medium text-slate-900">{AGENT_INFO.name}</dd>
           </div>
-        ) : (
-          <p className="text-gray-500">No hay operación seleccionada</p>
-        )}
-        <div className="mt-6 space-y-3">
+          <div>
+            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Dirección
+            </dt>
+            <dd className="mt-0.5 text-slate-700">{AGENT_INFO.address}</dd>
+          </div>
+          <div>
+            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Teléfono
+            </dt>
+            <dd className="mt-0.5 text-slate-700">{AGENT_INFO.landline}</dd>
+          </div>
+          <div>
+            <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Web
+            </dt>
+            <dd className="mt-0.5 text-slate-700">{AGENT_INFO.website}</dd>
+          </div>
+        </dl>
+
+        <div className="border-t border-slate-200 pt-5">
+          <h4 className="mb-3 text-sm font-semibold text-slate-900">Operación actual</h4>
+          {currentClient ? (
+            <div className="space-y-3">
+              <p className="text-base font-semibold text-slate-900">
+                {getOperationDisplayName(currentClient)}
+              </p>
+              <p className="text-xs text-slate-500">
+                {ownerCount} copropietario{ownerCount > 1 ? "s" : ""} en la misma operación
+              </p>
+              <Field label="Estado">
+                <Select
+                  value={currentClient.status}
+                  onChange={(event) =>
+                    void updateClient({
+                      ...currentClient,
+                      status: event.target.value as Client["status"],
+                    })
+                  }
+                >
+                  <option value="pendiente">Pendiente</option>
+                  <option value="aprobado">Aprobado</option>
+                  <option value="rechazado">Rechazado</option>
+                  <option value="activo">Activo</option>
+                  <option value="noactivo">No Activo</option>
+                </Select>
+              </Field>
+              <div>
+                <Tag tone={STATUS_TONE[currentClient.status]} className="capitalize">
+                  {currentClient.status}
+                </Tag>
+              </div>
+            </div>
+          ) : (
+            <p className="rounded-md bg-slate-50 p-3 text-sm text-slate-500">
+              No hay operación seleccionada. Crea una nueva para empezar.
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 space-y-3 border-t border-slate-200 pt-5">
           <PrimaryButton type="button" className="w-full" onClick={handleNewClient}>
-            Nueva Operación
+            + Nueva operación
           </PrimaryButton>
           <SecondaryButton type="button" className="w-full" onClick={handleClear}>
-            Limpiar Campos Actuales
+            Limpiar campos
           </SecondaryButton>
         </div>
-        <p className="mt-4 text-sm text-gray-500">
-          Total operaciones en base de datos: {clients.length}
+
+        <p className="mt-4 text-xs text-slate-500">
+          Total operaciones en base de datos:{" "}
+          <span className="font-semibold text-slate-900">{clients.length}</span>
         </p>
       </Panel>
 
       <form key={`${formKey}-${ownerCount}`} onSubmit={handleSave} className="space-y-6">
         <Panel title="Copropietarios de la operación">
-          <Field label="Número de titulares en la financiación">
+          <Field
+            label="Número de titulares en la financiación"
+            hint="Todos los titulares forman parte de la misma operación de financiación."
+          >
             <Select
               value={String(ownerCount)}
               onChange={(event) => {
@@ -253,28 +309,25 @@ export function AsesoramientoTab() {
               <option value="3">3 copropietarios</option>
             </Select>
           </Field>
-          <p className="mt-2 text-sm text-gray-500">
-            Todos los titulares forman parte de la misma operación de financiación.
-          </p>
         </Panel>
 
         {owners.map((owner, index) => (
           <OwnerFields key={index} index={index} owner={owner} />
         ))}
 
-        <Panel title="Información Adicional de la Operación">
-          <div className="grid gap-4 md:grid-cols-2">
+        <Panel title="Información adicional de la operación">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             <Field label="Hijos"><Input name="clientChildren" defaultValue={ai.children ?? ""} /></Field>
-            <Field label="Estado Civil"><Input name="clientMaritalStatus" defaultValue={ai.maritalStatus ?? ""} /></Field>
-            <Field label="Está en Alquiler">
+            <Field label="Estado civil"><Input name="clientMaritalStatus" defaultValue={ai.maritalStatus ?? ""} /></Field>
+            <Field label="¿Está en alquiler?">
               <Select name="clientRental" defaultValue={ai.rental ?? ""}>
                 <option value="">Seleccionar</option>
                 <option value="Si">Sí</option>
                 <option value="No">No</option>
               </Select>
             </Field>
-            <Field label="Inmuebles Capitalizados"><Input name="clientProperties" defaultValue={ai.properties ?? ""} /></Field>
-            <Field label="Valor de la Vivienda (objetivo, opcional)">
+            <Field label="Inmuebles capitalizados"><Input name="clientProperties" defaultValue={ai.properties ?? ""} /></Field>
+            <Field label="Valor de la vivienda objetivo (€)" hint="Opcional. Déjalo vacío para estimarlo en la calculadora.">
               <Input
                 name="clientPropertyValue"
                 type="text"
@@ -286,16 +339,21 @@ export function AsesoramientoTab() {
                       ? currentClient.housePrice
                       : ""
                 }
-                placeholder="Dejar vacío para estimar en la calculadora"
+                placeholder="0,00"
               />
             </Field>
-            <Field label="Zonas que Buscan"><Input name="clientZonesOfInterest" defaultValue={ai.zonesOfInterest ?? currentClient?.zone ?? ""} /></Field>
-            <div className="md:col-span-2">
-              <Field label="Observaciones"><TextArea name="clientObservations" rows={4} defaultValue={ai.observations ?? ""} /></Field>
+            <Field label="Zonas de interés"><Input name="clientZonesOfInterest" defaultValue={ai.zonesOfInterest ?? currentClient?.zone ?? ""} placeholder="Ej: Eixample, Gràcia..." /></Field>
+            <div className="md:col-span-2 lg:col-span-3">
+              <Field label="Observaciones">
+                <TextArea name="clientObservations" rows={4} defaultValue={ai.observations ?? ""} />
+              </Field>
             </div>
           </div>
-          <div className="mt-6 flex gap-3">
-            <PrimaryButton type="submit">Guardar Información</PrimaryButton>
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-slate-200 pt-5">
+            <PrimaryButton type="submit">Guardar información</PrimaryButton>
+            <SecondaryButton type="button" onClick={handleClear}>
+              Limpiar formulario
+            </SecondaryButton>
           </div>
         </Panel>
       </form>
