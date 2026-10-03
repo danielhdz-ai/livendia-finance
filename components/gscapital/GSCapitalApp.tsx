@@ -25,11 +25,16 @@ function TabContent() {
   const { activeTab, loading } = useGSCapital();
 
   if (loading) {
-    return <p className="py-12 text-center text-slate-500">Cargando datos...</p>;
+    return (
+      <div className="rounded-xl border border-slate-200 bg-white p-12 text-center text-slate-500 shadow-sm">
+        Cargando datos...
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="space-y-8">
+      {activeTab === "asesoramiento" ? <DashboardOverview /> : null}
       {activeTab === "asesoramiento" ? <AsesoramientoTab /> : null}
       {activeTab === "hipoteca" ? <HipotecaTab /> : null}
       {activeTab === "prestamo" ? <PrestamoTab /> : null}
@@ -39,7 +44,7 @@ function TabContent() {
       {activeTab === "notarias" ? <NotariasTab /> : null}
       {activeTab === "tasadores" ? <TasadoresTab /> : null}
       {activeTab === "configuracion" ? <ConfiguracionTab /> : null}
-    </>
+    </div>
   );
 }
 
@@ -76,7 +81,6 @@ function GSCapitalShell() {
         <AppHeader />
         <main className="flex-1 px-6 py-8">
           <div className="mx-auto max-w-7xl">
-            <DashboardOverview />
             <TabContent />
           </div>
         </main>

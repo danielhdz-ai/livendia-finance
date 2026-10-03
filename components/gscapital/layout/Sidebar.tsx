@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { ReactNode } from "react";
 import type { TabId } from "@/lib/gscapital/types";
 import {
@@ -62,7 +63,7 @@ const Icons: Record<SidebarIconKey, (props: IconProps) => ReactNode> = {
   settings: (props) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
       <circle cx="12" cy="12" r="3" />
-      <path d="M12 3v2M12 19v2M5 12H1M23 12h-5" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </svg>
   ),
 };
@@ -95,27 +96,36 @@ export function Sidebar({
     .join("")
     .toUpperCase();
 
+  const displayName = userEmail ?? AGENT_INFO.email;
+  const compactEmail = displayName.length > 22 ? `${displayName.slice(0, 21)}…` : displayName;
+
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-900 text-slate-100">
-      <div className="flex items-center gap-2 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-            <path d="M4 13 12 5l8 8" />
-            <path d="M7 11v8h10v-8" />
-          </svg>
+    <aside className="flex h-screen w-64 flex-col bg-[#0b3fb0] text-white shadow-xl">
+      <div className="flex items-center gap-3 px-5 pb-6">
+        <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/20">
+          <Image
+            src="/logo-livendia.png"
+            alt="Livendia Finance"
+            width={40}
+            height={40}
+            className="h-full w-full object-cover"
+            priority
+          />
         </div>
-        <div className="flex flex-col leading-tight">
+        <div className="flex min-w-0 flex-col leading-tight">
           <span className="text-lg font-bold tracking-tight text-white">livendia</span>
-          <span className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Plataforma financiera</span>
+          <span className="truncate text-[10px] uppercase tracking-[0.18em] text-white/70">
+            Plataforma financiera
+          </span>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 pb-4 pt-2">
+      <nav className="flex-1 space-y-6 overflow-y-auto px-3 pb-4 pt-1">
         {groups.map((group) => {
           const items = SIDEBAR_NAV.filter((item) => item.group === group.key);
           return (
             <div key={group.key}>
-              <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/60">
                 {group.title}
               </p>
               <div className="space-y-1">
@@ -129,13 +139,13 @@ export function Sidebar({
                       onClick={() => onChange(item.id)}
                       className={`group flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition ${
                         isActive
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : "text-slate-300 hover:bg-slate-800/70 hover:text-white"
+                          ? "bg-white/15 text-white shadow-inner ring-1 ring-white/10"
+                          : "text-white/80 hover:bg-white/10 hover:text-white"
                       }`}
                     >
                       <ItemIcon
                         className={`h-4 w-4 flex-shrink-0 ${
-                          isActive ? "text-white" : "text-slate-400 group-hover:text-white"
+                          isActive ? "text-white" : "text-white/70 group-hover:text-white"
                         }`}
                       />
                       <span className="truncate">{item.label}</span>
@@ -148,21 +158,23 @@ export function Sidebar({
         })}
       </nav>
 
-      <div className="border-t border-slate-800 px-3 py-3">
-        <div className="flex items-center gap-3 rounded-md px-2 py-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+      <div className="border-t border-white/10 px-3 py-3">
+        <div className="flex items-center gap-2 rounded-md px-2 py-2">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-[#0b3fb0]">
             {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-white">{AGENT_INFO.name}</p>
-            <p className="truncate text-xs text-slate-400">
-              {userEmail ?? AGENT_INFO.email}
+            <p className="truncate text-sm font-medium text-white" title={AGENT_INFO.name}>
+              {AGENT_INFO.name}
+            </p>
+            <p className="truncate text-[11px] text-white/70" title={displayName}>
+              {compactEmail}
             </p>
           </div>
           <button
             type="button"
             onClick={onToggleDarkMode}
-            className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white"
+            className="rounded-md p-1.5 text-white/70 hover:bg-white/10 hover:text-white"
             aria-label="Cambiar tema"
             title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
           >
@@ -172,7 +184,7 @@ export function Sidebar({
             <button
               type="button"
               onClick={onLogout}
-              className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white"
+              className="rounded-md p-1.5 text-white/70 hover:bg-white/10 hover:text-white"
               aria-label="Cerrar sesión"
               title="Cerrar sesión"
             >
@@ -183,8 +195,8 @@ export function Sidebar({
             </button>
           )}
         </div>
-        <div className="mt-2 flex items-center justify-between px-2 text-[11px] text-slate-400">
-          <span className="rounded-full bg-blue-600/15 px-2 py-0.5 font-medium text-blue-300">Plan Pro</span>
+        <div className="mt-2 flex items-center justify-between px-2 text-[11px] text-white/70">
+          <span className="rounded-full bg-white/15 px-2 py-0.5 font-semibold text-white">Plan Pro</span>
           <span>v2.2</span>
         </div>
       </div>

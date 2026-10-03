@@ -102,13 +102,18 @@ export function GSCapitalProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const storedDarkMode = localStorage.getItem("bdfinanciera_darkMode");
-    setDarkMode(storedDarkMode !== "false");
+    // Default to light mode; only enable dark if the user has explicitly opted in.
+    setDarkMode(storedDarkMode === "true");
     void refreshAll();
   }, [refreshAll]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("bdfinanciera_darkMode", String(darkMode));
+    if (darkMode) {
+      localStorage.setItem("bdfinanciera_darkMode", "true");
+    } else {
+      localStorage.removeItem("bdfinanciera_darkMode");
+    }
   }, [darkMode]);
 
   const persistClients = useCallback(async (nextClients: Client[]) => {
