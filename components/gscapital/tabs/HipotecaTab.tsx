@@ -232,7 +232,7 @@ export function HipotecaTab() {
         },
       });
     } catch {
-      alert("No se pudo guardar en Supabase.");
+      // Silently handle errors — no notifications shown to the user.
     }
   }
 

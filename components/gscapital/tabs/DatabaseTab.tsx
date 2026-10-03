@@ -47,7 +47,6 @@ export function DatabaseTab() {
 
   function openWhatsApp(phone?: string) {
     if (!phone) {
-      alert("El cliente no tiene teléfono registrado.");
       return;
     }
     let normalized = phone.replace(/[\s\-()]/g, "");
@@ -63,7 +62,7 @@ export function DatabaseTab() {
   return (
     <Panel
       title="Base de Datos Global de Clientes"
-      description="Listado completo de operaciones y clientes registrados en Supabase."
+      description="Listado completo de operaciones y clientes registrados."
     >
       <div className="mb-6 grid gap-4 md:grid-cols-2">
         <Field label="Filtrar por estado">
@@ -195,9 +194,7 @@ export function DatabaseTab() {
                         type="button"
                         className="rounded-md border border-red-200 bg-red-50 px-2 py-1 font-medium text-red-700 transition hover:bg-red-100"
                         onClick={() => {
-                          if (confirm(`¿Eliminar la operación ${getOperationDisplayName(client)}?`)) {
-                            void deleteClient(client.id);
-                          }
+                          void deleteClient(client.id);
                         }}
                       >
                         Eliminar

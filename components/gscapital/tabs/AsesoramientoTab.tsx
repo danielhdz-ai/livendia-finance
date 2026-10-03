@@ -166,33 +166,30 @@ export function AsesoramientoTab() {
 
   async function handleNewClient() {
     const count = ownerCount;
-    const promptMessage =
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const stamp = `${pad(now.getDate())}/${pad(now.getMonth() + 1)} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const defaultName =
       count === 1
-        ? "Ingrese el nombre del titular:"
-        : `Ingrese el nombre del primer titular (${count} copropietarios en la operación):`;
-    const name = prompt(promptMessage);
-    if (!name?.trim()) return;
+        ? `Nueva operación ${stamp}`
+        : `Nueva operación ${stamp} (${count} titulares)`;
     try {
-      await createClient(name.trim(), count);
+      await createClient(defaultName, count);
       setFormKey((value) => value + 1);
     } catch {
-      alert("No se pudo guardar el cliente en Supabase.");
+      // Silently handle errors — no notifications shown to the user.
     }
   }
 
   async function handleSave(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!currentClient) {
-      alert("Cree un nuevo cliente primero.");
-      return;
-    }
+    if (!currentClient) return;
     const form = new FormData(event.currentTarget);
     const updated = buildClientFromForm(currentClient, form, ownerCount);
     try {
       await updateClient(updated);
-      alert("Información guardada correctamente en Supabase.");
     } catch {
-      alert("No se pudo guardar en Supabase.");
+      // Silently handle errors — no notifications shown to the user.
     }
   }
 

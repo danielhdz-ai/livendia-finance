@@ -53,9 +53,6 @@ export function ConfiguracionTab() {
           notarias?: typeof notarias;
           tasadores?: typeof tasadores;
         };
-        if (!confirm("¿Importar datos? Esto reemplazará la información actual.")) {
-          return;
-        }
         await replaceAllData({
           clients: data.clients ?? [],
           collaborators: data.collaborators ?? [],
@@ -63,9 +60,8 @@ export function ConfiguracionTab() {
           notarias: data.notarias ?? [],
           tasadores: data.tasadores ?? [],
         });
-        alert("Datos importados correctamente en Supabase.");
       } catch {
-        alert("Archivo JSON inválido.");
+        // Silently handle invalid JSON — no notifications shown to the user.
       }
     };
     reader.readAsText(file);
@@ -89,7 +85,7 @@ export function ConfiguracionTab() {
           <div>
             <h3 className="mb-3 text-lg font-semibold">Importar Datos</h3>
             <p className="mb-4 text-gray-600">
-              Carga datos desde JSON y sincronízalos con Supabase.
+              Carga datos desde JSON y reemplaza la información actual.
             </p>
             <label className="inline-block">
               <PrimaryButton type="button">Importar desde JSON</PrimaryButton>
@@ -109,10 +105,10 @@ export function ConfiguracionTab() {
         <div className="mt-8 border-t border-gray-200 pt-6">
           <h3 className="mb-3 text-lg font-semibold">Sincronización</h3>
           <p className="mb-4 text-gray-600">
-            Recarga todos los datos desde Supabase.
+            Recarga todos los datos desde la nube.
           </p>
           <SecondaryButton type="button" onClick={() => void refreshAll()}>
-            Recargar desde Supabase
+            Recargar datos
           </SecondaryButton>
         </div>
       </Panel>

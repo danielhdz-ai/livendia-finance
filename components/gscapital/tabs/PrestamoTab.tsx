@@ -34,10 +34,7 @@ export function PrestamoTab() {
   );
 
   async function handleSaveToClient() {
-    if (!currentClient) {
-      alert("Seleccione o cree un cliente en Asesoramiento.");
-      return;
-    }
+    if (!currentClient) return;
     try {
       await updateClient({
         ...currentClient,
@@ -53,9 +50,8 @@ export function PrestamoTab() {
           updatedAt: new Date().toISOString(),
         },
       });
-      alert(`Simulación de préstamo guardada para "${currentClient.name}".`);
     } catch {
-      alert("No se pudo guardar en Supabase.");
+      // Silently handle errors — no notifications shown to the user.
     }
   }
 
@@ -73,7 +69,7 @@ export function PrestamoTab() {
         </p>
       ) : (
         <p className="text-sm text-amber-700">
-          Seleccione un cliente en Asesoramiento para guardar la simulación en Supabase.
+          Selecciona un cliente en Asesoramiento para guardar la simulación.
         </p>
       )}
       <Panel>
