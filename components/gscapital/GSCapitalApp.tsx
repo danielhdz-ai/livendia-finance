@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/gscapital/layout/AppHeader";
-import { TabNavigation } from "@/components/gscapital/layout/TabNavigation";
+import { DashboardOverview } from "@/components/gscapital/layout/DashboardOverview";
+import { Sidebar } from "@/components/gscapital/layout/Sidebar";
 import { AsesoramientoTab } from "@/components/gscapital/tabs/AsesoramientoTab";
 import { ColaboradoresTab } from "@/components/gscapital/tabs/ColaboradoresTab";
 import { ConfiguracionTab } from "@/components/gscapital/tabs/ConfiguracionTab";
@@ -24,7 +25,7 @@ function TabContent() {
   const { activeTab, loading } = useGSCapital();
 
   if (loading) {
-    return <p className="py-12 text-center text-gray-500">Cargando datos...</p>;
+    return <p className="py-12 text-center text-slate-500">Cargando datos...</p>;
   }
 
   return (
@@ -62,20 +63,27 @@ function GSCapitalShell() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      <AppHeader
-        darkMode={darkMode}
-        onToggleDarkMode={toggleDarkMode}
+    <div className="flex min-h-screen bg-slate-100 text-slate-900">
+      <Sidebar
+        activeTab={activeTab}
+        onChange={setActiveTab}
         userEmail={userEmail}
         onLogout={() => void handleLogout()}
+        darkMode={darkMode}
+        onToggleDarkMode={toggleDarkMode}
       />
-      <TabNavigation activeTab={activeTab} onChange={setActiveTab} />
-      <main className="container mx-auto px-4 py-8">
-        <TabContent />
-      </main>
-      <footer className="mt-12 border-t border-gray-200 bg-white py-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-900">
-        © {new Date().getFullYear()} {AGENT_INFO.company} - Todos los derechos reservados
-      </footer>
+      <div className="flex min-h-screen flex-1 flex-col">
+        <AppHeader />
+        <main className="flex-1 px-6 py-8">
+          <div className="mx-auto max-w-7xl">
+            <DashboardOverview />
+            <TabContent />
+          </div>
+        </main>
+        <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
+          © {new Date().getFullYear()} {AGENT_INFO.company} - Todos los derechos reservados
+        </footer>
+      </div>
     </div>
   );
 }

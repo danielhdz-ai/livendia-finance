@@ -72,7 +72,7 @@ const GSCapitalContext = createContext<GSCapitalContextValue | null>(null);
 
 export function GSCapitalProvider({ children }: { children: ReactNode }) {
   const [activeTab, setActiveTab] = useState<TabId>("asesoramiento");
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
