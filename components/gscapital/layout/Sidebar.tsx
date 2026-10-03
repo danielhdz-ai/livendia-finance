@@ -97,19 +97,20 @@ export function Sidebar({
 
   return (
     <aside className="flex h-screen w-64 flex-col bg-[#0b3fb0] text-white shadow-xl">
-      <div className="flex items-center gap-3 px-5 pb-6">
-        <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/20">
+      <div className="flex items-center gap-3 px-5 pb-6 pt-2">
+        <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-white/5">
           <Image
-            src="/logo-livendia.png"
+            src="/logo-livendia-white.png"
             alt="Livendia Finance"
-            width={40}
-            height={40}
-            className="h-full w-full object-cover"
+            width={120}
+            height={120}
+            quality={100}
+            className="h-full w-full object-contain"
             priority
           />
         </div>
         <div className="flex min-w-0 flex-col leading-tight">
-          <span className="text-lg font-bold tracking-tight text-white">livendia</span>
+          <span className="text-2xl font-extrabold tracking-tight text-white">livendia</span>
           <span className="truncate text-[10px] uppercase tracking-[0.18em] text-white/70">
             Plataforma financiera
           </span>
